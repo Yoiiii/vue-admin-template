@@ -54,7 +54,93 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/arknights',
+    component: Layout,
+    redirect: '/arknights/OperatorList',
+    name: 'arknights',
+    meta: {
+      title: '明日方舟资料站',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'content',
+        component: () => import('@/views/arknights/content/operator/OperatorEdit'), // Parent router-view
+        name: 'content',
+        meta: { title: '内容管理' },
+        children: [
+          {
+            path: 'operator',
+            component: () => import('@/views/arknights/content/operator/OperatorEdit'),
+            name: 'operator',
+            meta: { title: '干员' },
+            children: [
+              {
+                path: 'OperatorEdit',
+                component: () => import('@/views/arknights/content/operator/OperatorEdit'),
+                name: 'OperatorEdit',
+                meta: { title: '新增干员' }
+              },
+              {
+                path: 'OperatorList',
+                component: () => import('@/views/arknights/content/operator/OperatorList'),
+                name: 'OperatorList',
+                meta: { title: '干员列表' }
+              }
+            ]
+          },
+          // {
+          //   path: 'article',
+          //   component: () => import('@/views/arknights/content/article/ArticleEdit'),
+          //   name: 'article',
+          //   meta: { title: '文章' },
+          //   children: [
+          //     {
+          //       path: 'ArticleEdit',
+          //       component: () => import('@/views/arknights/content/article/ArticleEdit'),
+          //       name: 'ArticleEdit',
+          //       meta: { title: '新增文章' }
+          //     },
+          //     {
+          //       path: 'ArticleList',
+          //       component: () => import('@/views/arknights/content/article/ArticleList'),
+          //       name: 'ArticleList',
+          //       meta: { title: '文章列表' }
+          //     }
+          //   ]
+          // },
+          {
+            path: 'category',
+            component: () => import('@/views/arknights/content/category/CategoryEdit'),
+            name: 'category',
+            meta: { title: '分类' },
+            children: [
+              {
+                path: 'CategoryEdit',
+                component: () => import('@/views/arknights/content/category/CategoryEdit'),
+                name: 'CategoryEdit',
+                meta: { title: '新增分类' }
+              },
+              {
+                path: 'CategoryList',
+                component: () => import('@/views/arknights/content/category/CategoryList'),
+                name: 'CategoryList',
+                meta: { title: '分类列表' }
+              }
+            ]
+          },
 
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: '分类' }
+          }
+        ]
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,
