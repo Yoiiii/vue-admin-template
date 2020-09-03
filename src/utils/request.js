@@ -1,19 +1,20 @@
+// 封装axios
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
+// 创建axios实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API, // 设置Base Url  实际url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 5000 // 设置超时
 })
 
-// request interceptor
+// 拦截网络请求
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
+    // 再发送请求前需要做的事，例如添加token响应头
 
     if (store.getters.token) {
       // let each request carry token
