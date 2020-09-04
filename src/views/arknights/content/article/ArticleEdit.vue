@@ -26,6 +26,7 @@
 </template>
 <script>
 import { VueEditor } from 'vue2-editor'
+import { getArticles, editArticles, addArticles, uploadImg, Category } from '@/api/arknights/index.js'
 
 export default {
   components: {
@@ -47,10 +48,12 @@ export default {
   methods: {
     async save() {
       let res
-      if (this.id) {
-        res = await this.$http.put(`rest/articles/${this.id}`, this.model)
+      if (this.id !== '') {
+        // res = await this.$http.put(`rest/articles/${this.id}`, this.model)
+        res = await editArticles(this.id, this.model)
       } else {
-        res = await this.$http.post('rest/articles', this.model)
+        // res = await this.$http.post('rest/articles', this.model)
+        res = await addArticles(this.model)
       }
       if (res.data) {
         this.$router.push('/articles/list')
@@ -66,7 +69,8 @@ export default {
       }
     },
     async fetch() {
-      const res = await this.$http.get(`rest/articles/${this.id}`)
+      // const res = await this.$http.get(`rest/articles/${this.id}`)
+      const res = await getArticles(this.id)
       this.model = res.data
     },
     // async fetchCategories() {
@@ -75,14 +79,16 @@ export default {
 
     // },
     async fetchCategories() {
-      const res = await this.$http.post('getCategory/', { name: '文章分类' })
+      // const res = await this.$http.post('getCategory/', { name: '文章分类' })
+      const res = await Category({ name: '文章分类' })
       this.categories = res.data
     },
 
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
       const formData = new FormData()
       formData.append('file', file)
-      const res = await this.$http.post('upload', formData)
+      const res = await uploadImg(formData)
+      // const res = await this.$http.post('upload', formData)
       Editor.insertEmbed(cursorLocation, 'image', res.data.url)
       resetUploader()
     }

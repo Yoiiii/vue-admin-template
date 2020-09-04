@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import { getToken } from '@/utils/auth'
 
 /**
  * If you don't want to use mock-server
@@ -32,6 +33,21 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+Vue.mixin({
+  computed: {
+    mixinUploadUrl() {
+      return process.env.VUE_APP_BASE_API + '/upload'
+    }
+  },
+  methods: {
+    mixinGetAuthHeaders() {
+      return {
+        Authorization: `Bearer ${getToken() || ''}`
+      }
+    }
+  }
+})
 
 Vue.config.productionTip = false
 

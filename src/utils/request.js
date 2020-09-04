@@ -30,8 +30,7 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
-    const res = response.data
-    return res
+    return response
   },
   error => {
     if (error.response.data.message) {

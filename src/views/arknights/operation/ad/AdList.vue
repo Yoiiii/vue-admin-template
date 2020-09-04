@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import { getAdsList, deleteAds } from '@/api/arknights/index'
 export default {
   data() {
     return {
@@ -30,7 +31,7 @@ export default {
   },
   methods: {
     async fetch() {
-      const res = await this.$http.get('rest/ads')
+      const res = await getAdsList()
       this.items = res.data
     },
     async remove(row) {
@@ -40,7 +41,7 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          const res = await this.$http.delete(`rest/ads/${row._id}`)
+          const res = await deleteAds(row._id)
           if (res.data.success) {
             this.$message({
               type: 'success',

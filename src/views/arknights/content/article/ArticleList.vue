@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>文章列表</h1>
+    <!-- <h1>文章列表</h1> -->
     <el-table :data="items">
       <el-table-column prop="_id" label="ID" width="230" />
       <el-table-column prop="title" label="标题" />
@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import { getArticlesList, deleteArticles } from '@/api/arknights/index.js'
 export default {
   data() {
     return {
@@ -30,7 +31,9 @@ export default {
   },
   methods: {
     async fetch() {
-      const res = await this.$http.get('rest/articles')
+      // const res = await this.$http.get('rest/articles')
+      const res = await getArticlesList()
+
       this.items = res.data
     },
     async remove(row) {
@@ -40,7 +43,9 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          const res = await this.$http.delete(`rest/articles/${row._id}`)
+          // const res = await this.$http.delete(`rest/articles/${row._id}`)
+          const res = await deleteArticles(row._id)
+
           if (res.data.success) {
             this.$message({
               type: 'success',

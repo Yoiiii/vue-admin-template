@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
   {
@@ -66,13 +66,13 @@ export const constantRoutes = [
     children: [
       {
         path: 'content',
-        component: () => import('@/views/arknights/content/operator/OperatorEdit'), // Parent router-view
+        component: () => import('@/views/arknights/content/index'), // Parent router-view
         name: 'content',
         meta: { title: '内容管理' },
         children: [
           {
             path: 'operator',
-            component: () => import('@/views/arknights/content/operator/OperatorEdit'),
+            component: () => import('@/views/arknights/content/index'),
             name: 'operator',
             meta: { title: '干员' },
             children: [
@@ -90,29 +90,29 @@ export const constantRoutes = [
               }
             ]
           },
-          // {
-          //   path: 'article',
-          //   component: () => import('@/views/arknights/content/article/ArticleEdit'),
-          //   name: 'article',
-          //   meta: { title: '文章' },
-          //   children: [
-          //     {
-          //       path: 'ArticleEdit',
-          //       component: () => import('@/views/arknights/content/article/ArticleEdit'),
-          //       name: 'ArticleEdit',
-          //       meta: { title: '新增文章' }
-          //     },
-          //     {
-          //       path: 'ArticleList',
-          //       component: () => import('@/views/arknights/content/article/ArticleList'),
-          //       name: 'ArticleList',
-          //       meta: { title: '文章列表' }
-          //     }
-          //   ]
-          // },
+          {
+            path: 'article',
+            component: () => import('@/views/arknights/content/index'),
+            name: 'article',
+            meta: { title: '文章' },
+            children: [
+              {
+                path: 'ArticleEdit',
+                component: () => import('@/views/arknights/content/article/ArticleEdit'),
+                name: 'ArticleEdit',
+                meta: { title: '新增文章' }
+              },
+              {
+                path: 'ArticleList',
+                component: () => import('@/views/arknights/content/article/ArticleList'),
+                name: 'ArticleList',
+                meta: { title: '文章列表' }
+              }
+            ]
+          },
           {
             path: 'category',
-            component: () => import('@/views/arknights/content/category/CategoryEdit'),
+            component: () => import('@/views/arknights/content/index'),
             name: 'category',
             meta: { title: '分类' },
             children: [
@@ -129,13 +129,34 @@ export const constantRoutes = [
                 meta: { title: '分类列表' }
               }
             ]
-          },
-
+          }
+        ]
+      },
+      {
+        path: 'operation',
+        component: () => import('@/views/arknights/operation/index'), // Parent router-view
+        name: 'operation',
+        meta: { title: '运营管理' },
+        children: [
           {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: '分类' }
+            path: 'ad',
+            component: () => import('@/views/arknights/operation/index'),
+            name: 'ad',
+            meta: { title: '广告' },
+            children: [
+              {
+                path: 'AdEdit',
+                component: () => import('@/views/arknights/operation/ad/AdEdit'),
+                name: 'AdEdit',
+                meta: { title: '新增广告' }
+              },
+              {
+                path: 'AdList',
+                component: () => import('@/views/arknights/operation/ad/AdList'),
+                name: 'AdList',
+                meta: { title: '广告列表' }
+              }
+            ]
           }
         ]
       }

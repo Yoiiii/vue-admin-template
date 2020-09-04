@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+import { deleteOperator, getOperatorList } from '@/api/arknights/index'
 export default {
   data() {
     return {
@@ -37,7 +38,7 @@ export default {
   },
   methods: {
     async fetch() {
-      const res = await this.$http.get('rest/operators')
+      const res = await getOperatorList()
       this.items = res.data
     },
     async remove(row) {
@@ -47,7 +48,7 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          const res = await this.$http.delete(`rest/operators/${row._id}`)
+          const res = await deleteOperator(row._id)
           if (res.data.success) {
             this.$message({
               type: 'success',

@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import { addCategory, editCategory, getCategory, getCategoryList } from '@/api/arknights/index'
 export default {
   props: {
     id: {
@@ -38,9 +39,11 @@ export default {
     async save() {
       let res
       if (this.id) {
-        res = await this.$http.put(`rest/categories/${this.id}`, this.model)
+        // res = await this.$http.put(`rest/categories/${this.id}`, this.model)
+        res = await editCategory(this.id, this.model)
       } else {
-        res = await this.$http.post('rest/categories', this.model)
+        // res = await this.$http.post('rest/categories', this.model)
+        res = await addCategory(this.model)
       }
       if (res.data) {
         this.$router.push('/categories/list')
@@ -56,11 +59,14 @@ export default {
       }
     },
     async fetch() {
-      const res = await this.$http.get(`rest/categories/${this.id}`)
+      // const res = await this.$http.get(`rest/categories/${this.id}`)
+      const res = await getCategory(this.id)
       this.model = res.data
     },
     async fetchParents() {
-      const res = await this.$http.get(`rest/categories`)
+      // const res = await this.$http.get(`rest/categories`)
+      const res = await getCategoryList()
+
       this.parents = res.data
     }
   }

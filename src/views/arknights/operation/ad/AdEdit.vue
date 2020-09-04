@@ -54,6 +54,7 @@
 </template>
 <script>
 import { VueCropper } from 'vue-cropper'
+import { addAds, editAds, getAds } from '@/api/arknights/index'
 export default {
   components: {
     VueCropper
@@ -82,9 +83,9 @@ export default {
     async save() {
       let res
       if (this.id) {
-        res = await this.$http.put(`rest/ads/${this.id}`, this.model)
+        res = await editAds(this.id, this.model)
       } else {
-        res = await this.$http.post('rest/ads', this.model)
+        res = await addAds(this.model)
       }
       if (res.data) {
         this.$router.push('/ads/list')
@@ -130,7 +131,7 @@ export default {
       })
     },
     async fetch() {
-      const res = await this.$http.get(`rest/ads/${this.id}`)
+      const res = await getAds(this.id)
       this.model = Object.assign({}, this.model, res.data)
     },
     getBase64(file) {

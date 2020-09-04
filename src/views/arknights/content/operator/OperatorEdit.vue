@@ -124,6 +124,8 @@
     action:[{type:String}],//动作
     fullGraph:{type:String},//整图
 */
+
+import { addOperator, editOperator, getOperator, Category } from '@/api/arknights/index'
 export default {
   props: {
     id: {
@@ -156,10 +158,10 @@ export default {
     async save() {
       let res
       if (this.id) {
-        res = await this.$http.put(`rest/operators/${this.id}`, this.model)
+        res = await editOperator(this.id, this.model)
         console.log(res)
       } else {
-        res = await this.$http.post('rest/operators', this.model)
+        res = await addOperator(this.model)
       }
       if (res.data) {
         this.$router.push('/operators/list')
@@ -175,11 +177,11 @@ export default {
       }
     },
     async fetch() {
-      const res = await this.$http.get(`rest/operators/${this.id}`)
+      const res = await getOperator(this.id)
       this.model = Object.assign({}, this.model, res.data) // 防止数据undefined
     },
     async fetchCategories() {
-      const res = await this.$http.post('getCategory/', { name: '干员分类' })
+      const res = await Category({ name: '干员分类' })
       this.categories = res.data
     }
     // async fetchOperators() {

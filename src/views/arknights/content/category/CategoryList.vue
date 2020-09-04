@@ -29,6 +29,7 @@
   </div>
 </template>
 <script>
+import { deleteCategory, getCategoryList } from '@/api/arknights/index'
 export default {
   data() {
     return {
@@ -43,7 +44,9 @@ export default {
   methods: {
     async fetch() {
       // 获取所有分类列表
-      const res = await this.$http.get('rest/categories')
+      // const res = await this.$http.get('rest/categories')
+      const res = await getCategoryList()
+
       await this.catFetch(res.data)
       if (this.value) {
         this.handleChange(this.value)
@@ -82,7 +85,8 @@ export default {
     },
     async handleChange(value) {
       // 选择分类事件
-      const res = await this.$http.get('rest/categories')
+      // const res = await this.$http.get('rest/categories')
+      const res = await getCategoryList()
       const newItems = res.data.filter((item) => {
         console.log(item)
         if (item.parent) {
@@ -98,7 +102,9 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          const res = await this.$http.delete(`rest/categories/${row._id}`)
+          // const res = await this.$http.delete(`rest/categories/${row._id}`)
+          const res = await deleteCategory(row._id)
+
           if (res.data.success) {
             this.$message({
               type: 'success',
