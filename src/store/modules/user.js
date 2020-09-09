@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles: []
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
@@ -34,7 +38,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         console.log('response', response)
-        const { token } = response
+        const { token } = response.data
         commit('SET_TOKEN', token)// 更新vuex 中的token
         setToken(token)// 设置token
         resolve()
@@ -47,13 +51,16 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const userInfo = response
+      const token = { token: state.token }
+      getInfo(token).then(response => {
+        const userInfo = response.data
         if (!userInfo) {
-          return reject('Verification failed, please Login again.')
+          return reject('身份认证过期，请重新登录')
         }
-        const { username } = userInfo
+        const { username, roles, avatar } = userInfo
+        commit('SET_ROLES', roles)
         commit('SET_NAME', username)
+        commit('SET_AVATAR', avatar)
         // commit('SET_AVATAR', avatar)
         resolve(userInfo)
       }).catch(error => {
@@ -65,10 +72,12 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      const token = { token: state.token }
+      logout(token).then(() => {
         removeToken() // must remove  token  first
         resetRouter()
-        commit('RESET_STATE')
+        commit('RESET_STATE', '')
+        commit('SET_ROLES', [])
         resolve()
       }).catch(error => {
         reject(error)
@@ -80,7 +89,8 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
-      commit('RESET_STATE')
+      commit('RESET_STATE', '')
+      commit('SET_ROLES', [])
       resolve()
     })
   }

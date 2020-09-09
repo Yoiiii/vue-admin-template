@@ -13,7 +13,6 @@ const whiteList = ['/login'] // no redirect whitelist
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-
   // set page title
   document.title = getPageTitle(to.meta.title)
 
@@ -26,15 +25,24 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      // 确认用户权限
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      // 有权限则直接进入
+      if (hasRoles) {
         next()
+      // }
+      // const hasGetUserInfo = store.getters.name
+      // if (hasGetUserInfo) {
+      //   next()
       } else {
         try {
-          // get user info
-          await store.dispatch('user/getInfo')
+          // 获取用户权限
+          const { roles } = await store.dispatch('user/getInfo')
 
-          next()
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+
+          router.addRoutes(accessRoutes)
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

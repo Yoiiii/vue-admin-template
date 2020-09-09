@@ -8,17 +8,18 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo(data) {
   return request({
     url: '/admin/api/getUserInfo',
-    method: 'get',
-    params: { token }
+    method: 'post',
+    data
   })
 }
 
-export function logout() {
+export function logout(data) {
   return request({
     url: '/admin/api/logout',
-    method: 'post'
+    method: 'post',
+    data
   })
 }

@@ -10,8 +10,9 @@
           <el-button
             type="primary"
             size="small"
-            @click="$router.push(`/articles/edit/${scope.row._id}`)"
+            @click="$router.push({ name: 'ArticleEdit', params:{id:scope.row._id}})"
           >编辑</el-button>
+          <!-- @click="$router.push({ name: 'ArticleEdit', params:`{${scope.row._id}}`})" -->
           <el-button type="primary" size="small" @click="remove(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -66,6 +67,9 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    jumptoedit() {
+
     }
   }
 }

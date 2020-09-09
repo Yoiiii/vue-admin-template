@@ -34,15 +34,16 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    index: 0
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
+    index: 0
   },
-
   {
     path: '/',
     component: Layout,
@@ -52,116 +53,10 @@ export const constantRoutes = [
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
-    }]
+    }],
+    index: 1
   },
-  {
-    path: '/arknights',
-    component: Layout,
-    redirect: '/arknights/OperatorList',
-    name: 'arknights',
-    meta: {
-      title: '明日方舟资料站',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'content',
-        component: () => import('@/views/arknights/content/index'), // Parent router-view
-        name: 'content',
-        meta: { title: '内容管理' },
-        children: [
-          {
-            path: 'operator',
-            component: () => import('@/views/arknights/content/index'),
-            name: 'operator',
-            meta: { title: '干员' },
-            children: [
-              {
-                path: 'OperatorEdit',
-                component: () => import('@/views/arknights/content/operator/OperatorEdit'),
-                name: 'OperatorEdit',
-                meta: { title: '新增干员' }
-              },
-              {
-                path: 'OperatorList',
-                component: () => import('@/views/arknights/content/operator/OperatorList'),
-                name: 'OperatorList',
-                meta: { title: '干员列表' }
-              }
-            ]
-          },
-          {
-            path: 'article',
-            component: () => import('@/views/arknights/content/index'),
-            name: 'article',
-            meta: { title: '文章' },
-            children: [
-              {
-                path: 'ArticleEdit',
-                component: () => import('@/views/arknights/content/article/ArticleEdit'),
-                name: 'ArticleEdit',
-                meta: { title: '新增文章' }
-              },
-              {
-                path: 'ArticleList',
-                component: () => import('@/views/arknights/content/article/ArticleList'),
-                name: 'ArticleList',
-                meta: { title: '文章列表' }
-              }
-            ]
-          },
-          {
-            path: 'category',
-            component: () => import('@/views/arknights/content/index'),
-            name: 'category',
-            meta: { title: '分类' },
-            children: [
-              {
-                path: 'CategoryEdit',
-                component: () => import('@/views/arknights/content/category/CategoryEdit'),
-                name: 'CategoryEdit',
-                meta: { title: '新增分类' }
-              },
-              {
-                path: 'CategoryList',
-                component: () => import('@/views/arknights/content/category/CategoryList'),
-                name: 'CategoryList',
-                meta: { title: '分类列表' }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'operation',
-        component: () => import('@/views/arknights/operation/index'), // Parent router-view
-        name: 'operation',
-        meta: { title: '运营管理' },
-        children: [
-          {
-            path: 'ad',
-            component: () => import('@/views/arknights/operation/index'),
-            name: 'ad',
-            meta: { title: '广告' },
-            children: [
-              {
-                path: 'AdEdit',
-                component: () => import('@/views/arknights/operation/ad/AdEdit'),
-                name: 'AdEdit',
-                meta: { title: '新增广告' }
-              },
-              {
-                path: 'AdList',
-                component: () => import('@/views/arknights/operation/ad/AdList'),
-                name: 'AdList',
-                meta: { title: '广告列表' }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
+
   {
     path: '/example',
     component: Layout,
@@ -181,7 +76,8 @@ export const constantRoutes = [
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
       }
-    ]
+    ],
+    index: 3
   },
 
   {
@@ -194,9 +90,9 @@ export const constantRoutes = [
         component: () => import('@/views/form/index'),
         meta: { title: 'Form', icon: 'form' }
       }
-    ]
+    ],
+    index: 4
   },
-
   {
     path: '/nested',
     component: Layout,
@@ -206,6 +102,7 @@ export const constantRoutes = [
       title: 'Nested',
       icon: 'nested'
     },
+    index: 5,
     children: [
       {
         path: 'menu1',
@@ -255,20 +152,166 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: 'external-link',
     component: Layout,
+    index: 6,
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
+  }
 
+]
+
+// 动态路由
+export const asyncRoutes = [
+  {
+    path: '/arknights',
+    component: Layout,
+    redirect: '/arknights/content/operators/list',
+    name: 'arknights',
+    meta: {
+      title: '明日方舟资料站',
+      icon: 'nested',
+      roles: ['admin', 'arknights']
+    },
+    index: 2,
+    children: [
+      {
+        path: '/arknights/content',
+        component: () => import('@/views/arknights/content/index'), // Parent router-view
+        name: 'content',
+        meta: { title: '内容管理' },
+        children: [
+          {
+            path: '/arknights/content/operators',
+            component: () => import('@/views/arknights/content/index'),
+            name: 'Operator',
+            meta: { title: '干员' },
+            children: [
+              {
+                path: '/arknights/content/operators/create',
+                component: () => import('@/views/arknights/content/operator/OperatorEdit'),
+                name: 'OperatorCreate',
+                meta: { title: '新增干员' }
+              },
+              {
+                path: '/arknights/content/operators/edit:id',
+                component: () => import('@/views/arknights/content/operator/OperatorEdit'),
+                name: 'OperatorEdit',
+                meta: { title: '编辑干员' },
+                props: true,
+                hidden: true
+              },
+              {
+                path: '/arknights/content/operators/list',
+                component: () => import('@/views/arknights/content/operator/OperatorList'),
+                name: 'OperatorList',
+                meta: { title: '干员列表' }
+              }
+            ]
+          },
+          {
+            path: '/arknights/content/articles',
+            component: () => import('@/views/arknights/content/index'),
+            name: 'Article',
+            meta: { title: '文章' },
+            children: [
+              {
+                path: '/arknights/content/articles/create',
+                component: () => import('@/views/arknights/content/article/ArticleEdit'),
+                name: 'ArticleCreate',
+                meta: { title: '新增文章' }
+              },
+              {
+                path: '/arknights/content/articles/edit:id',
+                component: () => import('@/views/arknights/content/article/ArticleEdit'),
+                name: 'ArticleEdit',
+                meta: { title: '编辑文章' },
+                props: true,
+                hidden: true
+              },
+              {
+                path: '/arknights/content/articles/list',
+                component: () => import('@/views/arknights/content/article/ArticleList'),
+                name: 'ArticleList',
+                meta: { title: '文章列表' }
+              }
+            ]
+          },
+          {
+            path: '/arknights/content/categories',
+            component: () => import('@/views/arknights/content/index'),
+            name: 'Category',
+            meta: { title: '分类' },
+            children: [
+              {
+                path: '/arknights/content/categories/create',
+                component: () => import('@/views/arknights/content/category/CategoryEdit'),
+                name: 'CategoryCreate',
+                meta: { title: '新增文章' }
+              },
+              {
+                path: '/arknights/content/categories/edit:id',
+                component: () => import('@/views/arknights/content/category/CategoryEdit'),
+                name: 'CategoryEdit',
+                meta: { title: '编辑文章' },
+                props: true,
+                hidden: true
+              },
+              {
+                path: '/arknights/content/categories/list',
+                component: () => import('@/views/arknights/content/category/CategoryList'),
+                name: 'CategoryList',
+                meta: { title: '分类列表' }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: '/arknights/operation',
+        component: () => import('@/views/arknights/operation/index'), // Parent router-view
+        name: 'Operation',
+        meta: { title: '运营管理' },
+        children: [
+          {
+            path: '/arknights/operation/ads',
+            component: () => import('@/views/arknights/operation/index'),
+            name: 'Ads',
+            meta: { title: '广告' },
+            children: [
+              {
+                path: '/arknights/operation/ads/create',
+                component: () => import('@/views/arknights/operation/ad/AdEdit'),
+                name: 'AdCreate',
+                meta: { title: '新增广告' }
+              },
+              {
+                path: '/arknights/operation/ads/edit:id',
+                component: () => import('@/views/arknights/operation/ad/AdEdit'),
+                name: 'AdEdit',
+                meta: { title: '编辑广告' },
+                props: true,
+                hidden: true
+              },
+              {
+                path: '/arknights/operation/ads/list',
+                component: () => import('@/views/arknights/operation/ad/AdList'),
+                name: 'AdList',
+                meta: { title: '广告列表' }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', index: 0, hidden: true }
 ]
 
 const createRouter = () => new Router({

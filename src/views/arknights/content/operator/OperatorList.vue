@@ -17,7 +17,7 @@
           <el-button
             type="primary"
             size="small"
-            @click="$router.push(`/operators/edit/${scope.row._id}`)"
+            @click="$router.push({ name: 'OperatorEdit', params:{id:scope.row._id}})"
           >编辑</el-button>
           <el-button type="primary" size="small" @click="remove(scope.row)">删除</el-button>
         </template>
