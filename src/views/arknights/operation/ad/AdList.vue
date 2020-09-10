@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1>广告位列表</h1>
-    <el-table :data="items">
+    <el-table
+      v-loading="listLoading"
+      :data="items"
+      element-loading-text="加载中"
+    >
       <el-table-column prop="_id" label="ID" width="230" />
       <el-table-column prop="name" label="名称" />
       <el-table-column fixed="right" label="操作" width="180">
@@ -23,7 +27,8 @@ import { getAdsList, deleteAds } from '@/api/arknights/index'
 export default {
   data() {
     return {
-      items: []
+      items: [],
+      listLoading: false
     }
   },
   created() {
@@ -31,8 +36,10 @@ export default {
   },
   methods: {
     async fetch() {
+      this.listLoading = true
       const res = await getAdsList()
       this.items = res.data
+      this.listLoading = false
     },
     async remove(row) {
       this.$confirm(`是否要确定删除分类"${row.name}"?`, '提示', {

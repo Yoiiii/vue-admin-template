@@ -1,7 +1,11 @@
 <template>
   <div>
     <!-- <h1>文章列表</h1> -->
-    <el-table :data="items">
+    <el-table
+      v-loading="listLoading"
+      :data="items"
+      element-loading-text="加载中"
+    >
       <el-table-column prop="_id" label="ID" width="230" />
       <el-table-column prop="title" label="标题" />
       <el-table-column fixed="right" label="操作" width="180">
@@ -24,7 +28,8 @@ import { getArticlesList, deleteArticles } from '@/api/arknights/index.js'
 export default {
   data() {
     return {
-      items: []
+      items: [],
+      listLoading: false
     }
   },
   created() {
@@ -32,10 +37,11 @@ export default {
   },
   methods: {
     async fetch() {
+      this.listLoading = true
       // const res = await this.$http.get('rest/articles')
       const res = await getArticlesList()
-
       this.items = res.data
+      this.listLoading = false
     },
     async remove(row) {
       this.$confirm(`是否要确定删除文章"${row.title}"?`, '提示', {

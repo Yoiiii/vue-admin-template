@@ -10,7 +10,11 @@
     >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <el-table :data="items">
+    <el-table
+      v-loading="listLoading"
+      :data="items"
+      element-loading-text="加载中"
+    >
       <el-table-column prop="_id" label="ID" width="230" />
       <el-table-column prop="parent.name" label="上级分类" />
       <el-table-column prop="name" label="分类名称" />
@@ -35,7 +39,8 @@ export default {
     return {
       items: [],
       options: [],
-      value: ''
+      value: '',
+      listLoading: false
     }
   },
   created() {
@@ -43,6 +48,7 @@ export default {
   },
   methods: {
     async fetch() {
+      this.listLoading = true
       // 获取所有分类列表
       // const res = await this.$http.get('rest/categories')
       const res = await getCategoryList()
@@ -53,6 +59,7 @@ export default {
       } else {
         this.items = res.data
       }
+      this.listLoading = false
     },
     async catFetch(data) {
       const cats = []

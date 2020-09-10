@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1>干员列表</h1>
-    <el-table :data="items">
+    <el-table
+      v-loading="listLoading"
+      :data="items"
+      element-loading-text="加载中"
+    >
       <el-table-column prop="_id" label="ID" width="230" />
       <!-- <el-table-column prop="parent.name" label="上级分类"></el-table-column> -->
       <el-table-column prop="name" label="名称" />
@@ -30,7 +34,8 @@ import { deleteOperator, getOperatorList } from '@/api/arknights/index'
 export default {
   data() {
     return {
-      items: []
+      items: [],
+      listLoading: false
     }
   },
   created() {
@@ -38,8 +43,10 @@ export default {
   },
   methods: {
     async fetch() {
+      this.listLoading = true
       const res = await getOperatorList()
       this.items = res.data
+      this.listLoading = false
     },
     async remove(row) {
       this.$confirm(`是否要确定删除干员"${row.name}"?`, '提示', {

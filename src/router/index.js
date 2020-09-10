@@ -310,6 +310,33 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/setting',
+    name: 'Setting',
+    component: Layout,
+    meta: { title: '设置' },
+    index: 999,
+    children: [
+      {
+        path: '/setting/user',
+        component: () => import('@/views/setting/UserSetting'), // Parent router-view
+        name: 'UserSetting',
+        meta: { title: '用户管理', roles: ['admin'] }
+      },
+      {
+        path: '/setting/roles',
+        component: () => import('@/views/setting/RolesSetting'), // Parent router-view
+        name: 'RolesSetting',
+        meta: { title: '权限管理', roles: ['admin'] }
+      },
+      {
+        path: '/setting/password',
+        component: () => import('@/views/setting/PasswordSetting'), // Parent router-view
+        name: 'PasswordSetting',
+        meta: { title: '修改密码' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', index: 0, hidden: true }
 ]

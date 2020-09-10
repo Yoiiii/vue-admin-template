@@ -64,7 +64,6 @@ function hasPermission(roles, route) {
 // 侧边栏菜单排序
 function routeSort(route) {
   route.sort(compare('index'))
-  console.log('route', route)
   return route
 }
 // 数组排序
