@@ -314,7 +314,7 @@ export const asyncRoutes = [
     path: '/setting',
     name: 'Setting',
     component: Layout,
-    meta: { title: '设置' },
+    meta: { title: '设置', icon: 'el-icon-s-tools' },
     index: 999,
     children: [
       {

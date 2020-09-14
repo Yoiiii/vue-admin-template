@@ -32,6 +32,8 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
+      } if (value.length < 6) {
+        callback(new Error('密码不可小于6位'))
       } else {
         callback()
       }
@@ -51,7 +53,8 @@ export default {
       postForm: {
         oldPassword: '',
         newPassword: '',
-        cheackPassword: ''
+        cheackPassword: '',
+        token: ''
       },
       cheackPassword: '',
       rules: {
@@ -69,6 +72,7 @@ export default {
   },
   methods: {
     submitForm() {
+      this.postForm.token = this.$store.getters.token
       this.$refs['dataForm'].validate(async(valid) => {
         if (valid) {
           const res = await changePassword(this.postForm)
