@@ -31,3 +31,11 @@ export function changePassword(data) {
     data
   })
 }
+
+export function getUserInfo(id) {
+  return request({
+    url: '/admin/api/rest/AdminUser/' + id,
+    method: 'get'
+  })
+}
+

@@ -37,3 +37,20 @@ export function getUserList() {
   })
 }
 
+export function getRolesList() {
+  return request({
+    url: `/admin/api/rest/roles`,
+    method: 'get'
+  })
+}
+
+export function resetPassword(id) {
+  return request({
+    url: `/admin/api/resetPassword`,
+    method: 'post',
+    data: {
+      id: id
+    }
+  })
+}
+

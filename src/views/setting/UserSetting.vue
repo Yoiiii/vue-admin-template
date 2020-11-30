@@ -58,7 +58,7 @@
         <el-table-column prop="_id" label="ID" width="230" />
         <!-- <el-table-column prop="parent.name" label="上级分类"></el-table-column> -->
         <el-table-column prop="username" label="用户名" />
-        <el-table-column fixed="right" label="操作" width="180">
+        <el-table-column fixed="right" label="操作" width="240">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button> -->
             <el-button
@@ -66,6 +66,11 @@
               size="small"
               @click="showEditDialog(scope.row._id)"
             >编辑</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              @click="resetPsw(scope.row._id)"
+            >重置密码</el-button>
             <el-button
               type="primary"
               size="small"
@@ -80,14 +85,10 @@
       :title="editId ? '编辑' : '新增' + '账号'"
       :visible.sync="editDialogVisible"
     >
-      <el-form :model="postForm">
-        <el-form-item label="更改密码">
-          <el-input v-model="postForm.password" />
-        </el-form-item>
+      <el-form :model="postForm" :rules="dataRules">
         <el-form-item label="账号角色">
-          <el-select v-model="postForm.role" placeholder="请选择账号角色" multiple>
-            <el-option label="admin" value="admin" />
-            <el-option label="aaa" value="aaa" />
+          <el-select v-model="postForm.roles" name="userRoles" placeholder="请选择账号角色" multiple>
+            <el-option v-for="item in rolesList" :key="item.roles" :label="item.name" :value="item.roles" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -100,7 +101,7 @@
 </template>
 
 <script>
-import { getUserList, deleteUser, editUser } from '@/api/setting/index'
+import { getUserList, deleteUser, editUser, getUser, getRolesList, resetPassword } from '@/api/setting/index'
 export default {
   data() {
     return {
@@ -109,17 +110,21 @@ export default {
       listLoading: false,
       editId: null,
       postForm: {
-        password: '',
         roles: ''
       },
+      rolesList: [],
       searchName: '',
-      editDialogVisible: false
+      editDialogVisible: false,
+      dataRules: {
+        userRoles: [{ type: 'array', required: true, message: '请至少选择角色', trigger: 'change' }]
+      }
     }
   },
   created() {
     this.fetch()
   },
   methods: {
+    // 获取列表信息
     async fetch() {
       this.listLoading = true
       const res = await getUserList()
@@ -127,6 +132,7 @@ export default {
       this.itemsShow = JSON.parse(JSON.stringify(res.data))
       this.listLoading = false
     },
+    // 删除用户
     async remove(row) {
       this.$confirm(`是否要确定删除该用户"${row.name}"?`, '提示', {
         confirmButtonText: '确定',
@@ -156,12 +162,18 @@ export default {
           })
         })
     },
-    showEditDialog(id) {
+    // 编辑用户
+    async showEditDialog(id) {
       this.editId = id
+      const res = await getUser(id)
+      this.postForm.roles = res.data.roles
+      const rolesList = await getRolesList()
+      this.rolesList = rolesList.data
+      console.log(this.postForm.roles, this.rolesList)
       this.editDialogVisible = true
     },
+    // 筛选列表
     searchData() {
-      console.log(this.itemsShow)
       if (this.searchName === '') {
         this.itemsShow = this.items
       } else {
@@ -179,26 +191,42 @@ export default {
         this.itemsShow = filterData
       }
     },
+    // 重置表单
     resetForm() {
       this.searchName = ''
       this.fetch()
     },
+    // 保存编辑
     async saveChange() {
       const data = {
-        roles: ['admin']
-        // _id: this.editId
+        roles: this.postForm.roles
       }
-      // if (this.postForm.password !== '') {
-      //   data.password = this.postForm.password
-      // }
-      // if (this.postForm.roles.length !== 0) {
-      //   this.postForm.roles.forEach(item => {
-      //     data.roles.push(item.roles)
-      //   })
-      // }
       const res = await editUser(this.editId, data)
-      console.log(res)
+      if (res.statusText === 'OK') {
+        this.$message({ type: 'success', message: '保存成功' })
+      }
       this.editDialogVisible = false
+    },
+    // 重置密码
+    async resetPsw(id) {
+      this.$confirm('此操作将重置改用户的密码(默认密码:123456), 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        const res = await resetPassword(id)
+        if (res.data.msg === 'success') {
+          this.$message({
+            type: 'success',
+            message: '重置成功!'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
