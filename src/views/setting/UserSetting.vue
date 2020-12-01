@@ -202,10 +202,11 @@ export default {
         roles: this.postForm.roles
       }
       const res = await editUser(this.editId, data)
+      console.log(res)
       if (res.statusText === 'OK') {
         this.$message({ type: 'success', message: '保存成功' })
+        this.editDialogVisible = false
       }
-      this.editDialogVisible = false
     },
     // 重置密码
     async resetPsw(id) {
