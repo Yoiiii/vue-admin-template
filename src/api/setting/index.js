@@ -16,4 +16,14 @@ export function Category(data) {
   })
 }
 
+export function pvCount(website) {
+  return request({
+    url: '/admin/api/pvCount',
+    method: 'post',
+    data: {
+      website: website
+    }
+  })
+}
+
 export * from './user'

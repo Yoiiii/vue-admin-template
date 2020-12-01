@@ -193,6 +193,12 @@ export const asyncRoutes = [
             meta: { title: '干员' },
             children: [
               {
+                path: '/arknights/content/operators/list',
+                component: () => import('@/views/arknights/content/operator/OperatorList'),
+                name: 'OperatorList',
+                meta: { title: '干员列表' }
+              },
+              {
                 path: '/arknights/content/operators/create',
                 component: () => import('@/views/arknights/content/operator/OperatorEdit'),
                 name: 'OperatorCreate',
@@ -205,12 +211,6 @@ export const asyncRoutes = [
                 meta: { title: '编辑干员' },
                 props: true,
                 hidden: true
-              },
-              {
-                path: '/arknights/content/operators/list',
-                component: () => import('@/views/arknights/content/operator/OperatorList'),
-                name: 'OperatorList',
-                meta: { title: '干员列表' }
               }
             ]
           },
@@ -323,12 +323,12 @@ export const asyncRoutes = [
         name: 'UserSetting',
         meta: { title: '用户管理', roles: ['admin'] }
       },
-      {
-        path: '/setting/roles',
-        component: () => import('@/views/setting/RolesSetting'), // Parent router-view
-        name: 'RolesSetting',
-        meta: { title: '权限管理', roles: ['admin'] }
-      },
+      // {
+      //   path: '/setting/roles',
+      //   component: () => import('@/views/setting/RolesSetting'), // Parent router-view
+      //   name: 'RolesSetting',
+      //   meta: { title: '权限管理', roles: ['admin'] }
+      // },
       {
         path: '/setting/password',
         component: () => import('@/views/setting/PasswordSetting'), // Parent router-view

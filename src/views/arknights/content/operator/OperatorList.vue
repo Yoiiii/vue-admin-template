@@ -1,9 +1,30 @@
 <template>
   <div>
-    <h1>干员列表</h1>
+    <!-- <h1>干员列表</h1> -->
+    <el-form
+      ref="postForm"
+      :inline="true"
+      :style="{ width: 'auto' }"
+    >
+      <el-form-item
+        label-width="120"
+        label="名称"
+        prop="style"
+        class="form-item-left"
+      >
+        <el-input v-model="searchName" clearable />
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          @click.native.prevent="searchData"
+        >查询</el-button>
+        <el-button @click="resetForm()">重置</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       v-loading="listLoading"
-      :data="items"
+      :data="itemsShow"
       element-loading-text="加载中"
     >
       <el-table-column prop="_id" label="ID" width="230" />
@@ -35,7 +56,9 @@ export default {
   data() {
     return {
       items: [],
-      listLoading: false
+      itemsShow: [],
+      listLoading: false,
+      searchName: ''
     }
   },
   created() {
@@ -46,6 +69,7 @@ export default {
       this.listLoading = true
       const res = await getOperatorList()
       this.items = res.data
+      this.itemsShow = JSON.parse(JSON.stringify(res.data))
       this.listLoading = false
     },
     async remove(row) {
@@ -76,6 +100,19 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    searchData() {
+      if (this.searchName === '') {
+        this.itemsShow = this.items
+      } else {
+        const filterData = this.items.filter((item) => {
+          if (item.name.indexOf(this.searchName) !== -1) {
+            return true
+          }
+        })
+        console.log(filterData)
+        this.itemsShow = filterData
+      }
     }
   }
 }

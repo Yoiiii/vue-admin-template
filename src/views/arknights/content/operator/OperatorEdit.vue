@@ -164,7 +164,7 @@ export default {
         res = await addOperator(this.model)
       }
       if (res.data) {
-        this.$router.push('/operators/list')
+        this.$router.push({ name: 'OperatorList' })
         this.$message({
           type: 'success',
           message: '保存成功'
