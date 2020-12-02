@@ -24,7 +24,7 @@ Vue.use(ElementUI, { locale })
 Vue.mixin({
   computed: {
     mixinUploadUrl() {
-      return 'https://shawyoi.cn/' + 'admin/api/upload'
+      return 'https://shawyoi.cn/admin/api/upload'
     }
   },
   methods: {

@@ -39,7 +39,7 @@
     </el-form>
     <el-dialog title="剪切图片" :visible.sync="dialogVisible">
       <div style="width:100%;height:400px">
-        <vue-cropper ref="cropper" auto-crop :img="cutimage" :fixed-number="[16,9]" center-box />
+        <vue-cropper ref="cropper" auto-crop :img="cutimage" :fixed-number="[16,9]" fixed="true" center-box />
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button icon="el-icon-refresh-right" circle @click="rotateRightImage" />
@@ -54,7 +54,7 @@
 </template>
 <script>
 import { VueCropper } from 'vue-cropper'
-import { addAds, editAds, getAds } from '@/api/arknights/index'
+import { addAds, editAds, getAds, uploadImg } from '@/api/arknights/index'
 export default {
   components: {
     VueCropper
@@ -70,6 +70,7 @@ export default {
       model: {
         items: []
       },
+      fixedNumber: [4, 3],
       dialogVisible: false,
       cutimage: '',
       aftercut: '',
@@ -101,8 +102,8 @@ export default {
       }
     },
     uploadItem(i) {
-      this.uploaditem = i
-      console.log(this.uploaditem)
+      // this.uploaditem = i
+      console.log(i)
     },
     async cutImage(parms) {
       this.cutimage = await this.getBase64(parms.file)
@@ -117,13 +118,7 @@ export default {
         const file = this.dataURLtoFile(data)
         const formData = new FormData() // 声明一个FormData对象
         formData.append('file', file)
-        const res = await this.$http.post(
-          this.$http.defaults.baseURL + '/upload',
-          formData,
-          {
-            headers: { Authorization: `Bearer ${localStorage.token || ''}` }
-          }
-        )
+        const res = await uploadImg(formData)
         console.log(res.data)
         console.log(this.model)
         const i = this.uploaditem
@@ -133,6 +128,7 @@ export default {
     async fetch() {
       const res = await getAds(this.id)
       this.model = Object.assign({}, this.model, res.data)
+      console.log(this.model)
     },
     getBase64(file) {
       return new Promise((resolve, reject) => {
