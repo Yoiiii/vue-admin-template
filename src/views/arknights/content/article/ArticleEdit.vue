@@ -56,7 +56,7 @@ export default {
         res = await addArticles(this.model)
       }
       if (res.data) {
-        this.$router.push('/articles/list')
+        this.$router.push({ name: 'ArticleList' })
         this.$message({
           type: 'success',
           message: '保存成功'

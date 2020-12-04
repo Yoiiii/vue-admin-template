@@ -95,7 +95,7 @@ export default {
       // const res = await this.$http.get('rest/categories')
       const res = await getCategoryList()
       const newItems = res.data.filter((item) => {
-        console.log(item)
+        // console.log(item)
         if (item.parent) {
           return item.parent.name === value
         }

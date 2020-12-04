@@ -169,7 +169,7 @@ export default {
       this.postForm.roles = res.data.roles
       const rolesList = await getRolesList()
       this.rolesList = rolesList.data
-      console.log(this.postForm.roles, this.rolesList)
+      // console.log(this.postForm.roles, this.rolesList)
       this.editDialogVisible = true
     },
     // 筛选列表
@@ -178,16 +178,16 @@ export default {
         this.itemsShow = this.items
       } else {
         const filterData = this.items.filter((item) => {
-          console.log(
-            item.username,
-            this.searchName,
-            item.username.indexOf(this.searchName)
-          )
+          // console.log(
+          //   item.username,
+          //   this.searchName,
+          //   item.username.indexOf(this.searchName)
+          // )
           if (item.username.indexOf(this.searchName) !== -1) {
             return true
           }
         })
-        console.log(filterData)
+        // console.log(filterData)
         this.itemsShow = filterData
       }
     },
@@ -202,7 +202,7 @@ export default {
         roles: this.postForm.roles
       }
       const res = await editUser(this.editId, data)
-      console.log(res)
+      // console.log(res)
       if (res.statusText === 'OK') {
         this.$message({ type: 'success', message: '保存成功' })
         this.editDialogVisible = false

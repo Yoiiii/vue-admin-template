@@ -13,11 +13,28 @@
           <el-form-item label="头像">
             <el-upload
               class="avatar-uploader"
+              action=""
+              :auto-upload="false"
+              :show-file-list="false"
+              :on-change="cutImage"
+            >
+              <!-- <el-upload
+                class="avatar-uploader"
+                action="mixinUploadUrl"
+                :show-file-list="false"
+                :headers="mixinGetAuthHeaders()"
+                :http-request="cutImage"
+              > -->
+              <!-- <img v-if="item.image" :src="item.image">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload> -->
+              <!-- <el-upload
+              class="avatar-uploader"
               :action="mixinUploadUrl"
               :show-file-list="false"
               :on-success="res=>$set(model,'avatar',res.url)"
               :headers="mixinGetAuthHeaders()"
-            >
+            > -->
               <img v-if="model.avatar" :src="model.avatar" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon" />
             </el-upload>
@@ -104,6 +121,30 @@
         <el-button type="primary" native-type="submit">保存</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="剪切图片" :visible.sync="dialogVisible" :before-close="handleClose">
+      <div style="width: 100%; height: 400px">
+        <vue-cropper
+          ref="cropper"
+          auto-crop
+          :img="cutimage"
+          :fixed-number="[1, 1]"
+          :fixed="fixed"
+          center-box
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          icon="el-icon-refresh-right"
+          circle
+          @click="rotateRightImage"
+        />
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadImage">
+          上传
+          <i class="el-icon-upload el-icon--right" />
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -125,8 +166,18 @@
     fullGraph:{type:String},//整图
 */
 
-import { addOperator, editOperator, getOperator, Category } from '@/api/arknights/index'
+import {
+  addOperator,
+  editOperator,
+  getOperator,
+  Category,
+  uploadImg
+} from '@/api/arknights/index'
+import { VueCropper } from 'vue-cropper'
 export default {
+  components: {
+    VueCropper
+  },
   props: {
     id: {
       type: String,
@@ -144,7 +195,10 @@ export default {
       heroes: [],
       tags: [],
       skills: [],
-      partners: []
+      partners: [],
+      cutimage: '',
+      dialogVisible: false,
+      fixed: true
     }
   },
   created() {
@@ -159,7 +213,7 @@ export default {
       let res
       if (this.id) {
         res = await editOperator(this.id, this.model)
-        console.log(res)
+        // console.log(res)
       } else {
         res = await addOperator(this.model)
       }
@@ -176,6 +230,13 @@ export default {
         })
       }
     },
+    rotateRightImage() {
+      this.$refs.cropper.rotateRight()
+    },
+    async cutImage(file, fileList) {
+      this.cutimage = await this.getBase64(file.raw)
+      this.dialogVisible = true
+    },
     async fetch() {
       const res = await getOperator(this.id)
       this.model = Object.assign({}, this.model, res.data) // 防止数据undefined
@@ -183,6 +244,55 @@ export default {
     async fetchCategories() {
       const res = await Category({ name: '干员分类' })
       this.categories = res.data
+    },
+    async uploadImage() {
+      this.dialogVisible = false
+      this.$refs.cropper.getCropData(async(data) => {
+        const file = this.dataURLtoFile(data)
+        const formData = new FormData() // 声明一个FormData对象
+        formData.append('file', file)
+        const res = await uploadImg(formData)
+        // console.log(res.data)
+        // console.log(this.model)
+        this.model.avatar = res.data.url
+      })
+    },
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        let fileResult = ''
+        reader.readAsDataURL(file) // 开始转
+        reader.onload = function() {
+          fileResult = reader.result
+        } // 转 失败
+        reader.onerror = function(error) {
+          reject(error)
+        } // 转 结束  咱就 resolve 出去
+        reader.onloadend = function() {
+          resolve(fileResult)
+        }
+      })
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    },
+    dataURLtoFile(dataurl, filename = 'file') {
+      const arr = dataurl.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const suffix = mime.split('/')[1]
+      const bstr = atob(arr[1])
+      let n = bstr.length
+      const u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      return new File([u8arr], `${filename}.${suffix}`, {
+        type: mime
+      })
     }
     // async fetchOperators() {
     //   const res = await this.$http.get(`rest/operators`);

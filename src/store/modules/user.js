@@ -37,7 +37,7 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log('response', response)
+        // console.log('response', response)
         const { token } = response.data
         commit('SET_TOKEN', token)// 更新vuex 中的token
         setToken(token)// 设置token

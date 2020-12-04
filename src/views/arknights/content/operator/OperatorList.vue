@@ -110,7 +110,7 @@ export default {
             return true
           }
         })
-        console.log(filterData)
+        // console.log(filterData)
         this.itemsShow = filterData
       }
     }

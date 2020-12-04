@@ -183,12 +183,14 @@ export const asyncRoutes = [
       {
         path: '/arknights/content',
         component: () => import('@/views/arknights/content/index'), // Parent router-view
+        redirect: '/arknights/content/operators/list',
         name: 'content',
         meta: { title: '内容管理' },
         children: [
           {
             path: '/arknights/content/operators',
             component: () => import('@/views/arknights/content/index'),
+            redirect: '/arknights/content/operators/list',
             name: 'Operator',
             meta: { title: '干员' },
             children: [
@@ -217,6 +219,7 @@ export const asyncRoutes = [
           {
             path: '/arknights/content/articles',
             component: () => import('@/views/arknights/content/index'),
+            redirect: '/arknights/content/article/ArticleList',
             name: 'Article',
             meta: { title: '文章' },
             children: [
@@ -245,6 +248,7 @@ export const asyncRoutes = [
           {
             path: '/arknights/content/categories',
             component: () => import('@/views/arknights/content/index'),
+            redirect: '/arknights/content/categories/list',
             name: 'Category',
             meta: { title: '分类' },
             children: [
@@ -252,13 +256,13 @@ export const asyncRoutes = [
                 path: '/arknights/content/categories/create',
                 component: () => import('@/views/arknights/content/category/CategoryEdit'),
                 name: 'CategoryCreate',
-                meta: { title: '新增文章' }
+                meta: { title: '新增分类' }
               },
               {
                 path: '/arknights/content/categories/edit:id',
                 component: () => import('@/views/arknights/content/category/CategoryEdit'),
                 name: 'CategoryEdit',
-                meta: { title: '编辑文章' },
+                meta: { title: '编辑分类' },
                 props: true,
                 hidden: true
               },
@@ -275,6 +279,7 @@ export const asyncRoutes = [
       {
         path: '/arknights/operation',
         component: () => import('@/views/arknights/operation/index'), // Parent router-view
+        redirect: '/arknights/operation/ads/list',
         name: 'Operation',
         meta: { title: '运营管理' },
         children: [

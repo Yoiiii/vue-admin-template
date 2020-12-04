@@ -46,7 +46,7 @@ export default {
         res = await addCategory(this.model)
       }
       if (res.data) {
-        this.$router.push('/categories/list')
+        this.$router.push({ name: 'CategoryList' })
         this.$message({
           type: 'success',
           message: '保存成功'
