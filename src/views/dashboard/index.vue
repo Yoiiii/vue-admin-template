@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <!-- <iframe src="http://localhost:3000/" width="100%" height="600px" frameborder="0" /> -->
+    <iframe src="http://shawyoi.cn" width="100%" height="600px" frameborder="0" />
+
   </div>
 </template>
 

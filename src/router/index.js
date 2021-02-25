@@ -316,6 +316,31 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/homepage',
+    component: Layout,
+    redirect: '/homepage/item',
+    name: 'homepage',
+    meta: {
+      title: '首页管理',
+      icon: 'nested',
+      roles: ['admin']
+    },
+    index: 3,
+    children: [
+      {
+        path: '/homepage/picture',
+        component: () => import('@/views/homepage/item/item'), // Parent router-view
+        name: 'homepage-item',
+        meta: { title: '首页图' }
+      },
+      {
+        path: '/homepage/item',
+        component: () => import('@/views/homepage/item/item'), // Parent router-view
+        name: 'homepage-item',
+        meta: { title: '项目管理' }
+      }]
+  },
+  {
     path: '/setting',
     name: 'Setting',
     component: Layout,
