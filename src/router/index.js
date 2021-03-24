@@ -329,7 +329,7 @@ export const asyncRoutes = [
     children: [
       {
         path: '/homepage/picture',
-        component: () => import('@/views/homepage/item/item'), // Parent router-view
+        component: () => import('@/views/homepage/picture/index'), // Parent router-view
         name: 'homepage-item',
         meta: { title: '首页图' }
       },
